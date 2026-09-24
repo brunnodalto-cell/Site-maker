@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rabanete — Guia Interativo</title>
+<style>
+:root{
+  --red:#b72f4c;--red-dark:#762137;--green:#477b43;--green-light:#dcebd8;
+  --cream:#f7f3ea;--paper:#fffdf8;--ink:#282828;--muted:#6d6863;--line:#ddd6ca;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+button{font:inherit}
+.topbar{position:sticky;top:0;z-index:20;background:#fffdf9eF;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.nav{width:min(1100px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+.logo{font-weight:800;color:var(--red-dark);letter-spacing:.4px}
+.progress{height:4px;background:#eee9df}
+.progress span{display:block;height:100%;width:0;background:var(--red);transition:width .25s}
+.menu{display:flex;gap:8px;overflow:auto}
+.menu a{white-space:nowrap;text-decoration:none;color:var(--muted);padding:7px 10px;border-radius:7px;font-size:14px}
+.menu a:hover{background:#f0ebe2;color:var(--red-dark)}
+main{width:min(1000px,92%);margin:auto}
+.hero{min-height:650px;display:grid;place-items:center;text-align:center;padding:80px 20px}
+.hero-inner{max-width:800px}
+.kicker{text-transform:uppercase;letter-spacing:2px;font-size:13px;font-weight:800;color:var(--red)}
+h1{font-size:clamp(44px,8vw,78px);line-height:1.02;margin:15px 0;color:var(--red-dark)}
+h2{font-size:clamp(30px,5vw,44px);line-height:1.1;color:var(--red-dark);margin:0 0 18px}
+h3{color:var(--red-dark)}
+p{font-size:18px}
+.hero p{font-size:21px;color:var(--muted)}
+.radish-illustration{width:190px;height:190px;margin:25px auto;position:relative}
+.rroot{position:absolute;width:125px;height:120px;left:32px;top:58px;border-radius:48% 52% 50% 50%;background:#c93c59;border-bottom:14px solid #9e2944}
+.rleaf{position:absolute;width:58px;height:92px;background:var(--green);border-radius:100% 5% 100% 5%;top:0;left:53px;transform:rotate(-25deg)}
+.rleaf:nth-child(2){left:88px;transform:rotate(28deg);background:#5c914f}
+.rleaf:nth-child(3){left:70px;transform:rotate(5deg);background:#789c4d}
+.rtail{position:absolute;width:22px;height:34px;background:#e8ddd0;left:85px;top:164px;border-radius:50%}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:8px;padding:12px 18px;background:var(--red);color:white;font-weight:700;cursor:pointer}
+.btn.secondary{background:white;color:var(--red-dark);border:1px solid #cdbfc0}
+.section{padding:90px 0;border-top:1px solid var(--line);scroll-margin-top:70px}
+.section-head{max-width:720px;margin-bottom:30px}
+.note{padding:16px 18px;background:#fff;border-left:4px solid var(--green);border-radius:5px;margin:22px 0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px;transition:.25s}
+.card.clickable{cursor:pointer}
+.card.clickable:hover{transform:translateY(-3px);border-color:#c49da7}
+.card.active{border-color:var(--red);background:#fff8f8}
+.card strong{display:block;font-size:19px;color:var(--red-dark);margin-bottom:8px}
+.hidden-info{display:none;margin-top:10px;color:var(--muted)}
+.card.active .hidden-info{display:block}
+.fact-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fact{background:#eee9df;border-radius:8px;padding:18px}
+.fact b{display:block;font-size:25px;color:var(--red-dark)}
+.planting{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}
+.diagram{background:#d9edf3;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.sky{height:150px;background:#dceef5;position:relative}
+.sun{position:absolute;right:28px;top:22px;width:45px;height:45px;background:#e8b84d;border-radius:50%}
+ground{display:block;height:90px;background:#806047;border-top:12px solid #5f974d}
+.diagram-stage{height:250px;position:relative}
+.seed-dot{position:absolute;width:16px;height:16px;background:#c89d64;border-radius:50%;left:50%;top:190px;transform:translateX(-50%)}
+.stem{position:absolute;width:7px;height:95px;background:#4b8848;left:50%;top:98px;transform:translateX(-50%);border-radius:5px;display:none}
+.stem:before,.stem:after{content:"";position:absolute;width:45px;height:23px;background:#5b9b51;border-radius:100% 0;top:2px}
+.stem:before{left:-40px;transform:rotate(-20deg)}
+.stem:after{left:5px;transform:rotate(20deg)}
+.root-big{position:absolute;width:72px;height:65px;background:#c43a56;border-radius:50%;left:50%;top:167px;transform:translateX(-50%);display:none}
+.stage-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.stage-controls button{border:1px solid #cdbfc0;background:white;color:var(--red-dark);border-radius:7px;padding:9px 12px;cursor:pointer}
+.stage-controls button.active{background:var(--red);color:white;border-color:var(--red)}
+.checklist{display:grid;gap:10px}
+.check{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);padding:14px;border-radius:8px;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--green);margin-top:3px}
+.care-result{margin-top:15px;font-weight:700;color:var(--green)}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tab{border:0;background:transparent;padding:11px 14px;cursor:pointer;color:var(--muted);font-weight:700;border-bottom:3px solid transparent}
+.tab.active{color:var(--red-dark);border-color:var(--red)}
+.tabpanel{display:none;background:#fff;padding:22px;border:1px solid var(--line);border-radius:0 0 9px 9px}
+.tabpanel.active{display:block}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.time{padding:18px;background:#fff;border-top:4px solid var(--green);border-radius:7px}
+.time b{display:block;color:var(--red-dark);font-size:20px}
+.quiz{background:#fff;border:1px solid var(--line);border-radius:10px;padding:24px}
+.option{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#faf8f3;padding:12px;border-radius:7px;margin:9px 0;cursor:pointer}
+.option:hover{border-color:#bf7c8b}
+.option.correct{background:#e3f1df;border-color:#78a46f}
+.option.wrong{background:#f8dfe4;border-color:#c96c7e}
+.quiz-result{min-height:28px;font-weight:700}
+.sources{font-size:14px;color:var(--muted)}
+.sources li{margin:6px 0}
+.reveal{opacity:0;transform:translateY(25px);transition:.6s ease}
+.reveal.visible{opacity:1;transform:none}
+footer{padding:45px 0;text-align:center;color:var(--muted);border-top:1px solid var(--line)}
+@media(max-width:760px){
+ .grid,.fact-row,.planting{grid-template-columns:1fr}
+ .timeline{grid-template-columns:1fr 1fr}
+ .menu{display:none}
+ .hero{min-height:560px}
+ p{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{transition:none}}
+</style>
+</head>
+<body>
+<header class="topbar">
+ <div class="nav">
+  <div class="logo">RABANETE • TRABALHO INTERATIVO</div>
+  <nav class="menu" aria-label="Navegação">
+   <a href="#sobre">Sobre</a><a href="#plantio">Plantio</a><a href="#cuidados">Cuidados</a><a href="#ciclo">Ciclo</a><a href="#quiz">Quiz</a>
+  </nav>
+ </div>
+ <div class="progress"><span id="progress"></span></div>
+</header>
+
+<main>
+<section class="hero reveal">
+ <div class="hero-inner">
+  <div class="radish-illustration" aria-hidden="true">
+   <i class="rleaf"></i><i class="rleaf"></i><i class="rleaf"></i><i class="rroot"></i><i class="rtail"></i>
+  </div>
+  <div class="kicker">Guia interativo</div>
+  <h1>Rabanete</h1>
+  <p>Um estudo interativo sobre a planta, seu cultivo, seus cuidados e seu ciclo de vida.</p>
+  <a class="btn" href="#sobre">Começar a leitura ↓</a>
+ </div>
+</section>
+
+<section id="sobre" class="section reveal">
+ <div class="section-head">
+  <div class="kicker">01 — Identificação</div><h2>O que é o rabanete?</h2>
+  <p>O rabanete é uma planta cultivada principalmente pela sua raiz, que se desenvolve sob o solo. Ele pertence à família Brassicaceae, a mesma família de plantas como couve, brócolis e repolho.</p>
+ </div>
+ <div class="grid">
+  <div class="card clickable"><strong>🌱 Planta</strong><span>É uma planta herbácea de crescimento relativamente rápido.</span><div class="hidden-info">Suas folhas crescem acima do solo enquanto a raiz engrossa abaixo dele.</div></div>
+  <div class="card clickable"><strong>🥗 Alimentação</strong><span>A raiz pode ser consumida de diferentes maneiras.</span><div class="hidden-info">É comum encontrar o rabanete cru em saladas, mas ele também pode ser preparado em outras receitas.</div></div>
+  <div class="card clickable"><strong>🔬 Família</strong><span>Faz parte da família Brassicaceae.</span><div class="hidden-info">Essa família também inclui diversas hortaliças conhecidas, como couve e brócolis.</div></div>
+ </div>
+ <div class="fact-row" style="margin-top:18px">
+  <div class="fact"><b>Cor</b>Várias variedades apresentam tons vermelhos, rosados, brancos ou combinações.</div>
+  <div class="fact"><b>Parte principal</b>A raiz é a parte mais conhecida e normalmente colhida para alimentação.</div>
+ </div>
+</section>
+
+<section id="plantio" class="section reveal">
+ <div class="section-head">
+  <div class="kicker">02 — Cultivo</div><h2>Como plantar o rabanete?</h2>
+  <p>Use os controles abaixo para acompanhar visualmente as etapas do plantio.</p>
+ </div>
+ <div class="planting">
+  <div>
+   <h3 id="stageTitle">Etapa 1 — Preparar o local</h3>
+   <p id="stageText">Escolha um local com boa luminosidade e prepare um solo solto e bem drenado.</p>
+   <div class="stage-controls" id="stageButtons">
+    <button class="active" data-stage="0">1. Preparar</button>
+    <button data-stage="1">2. Semear</button>
+    <button data-stage="2">3. Cuidar</button>
+    <button data-stage="3">4. Colher</button>
+   </div>
+  </div>
+  <div class="diagram">
+   <div class="sky"><div class="sun"></div></div>
+   <ground>
+    <div class="diagram-stage">
+     <div class="seed-dot" id="seed"></div><div class="stem" id="stem"></div><div class="root-big" id="rootBig"></div>
+    </div>
+   </ground>
+  </div>
+ </div>
+ <div class="note"><b>Importante:</b> a profundidade das sementes, espaçamento e época ideal podem variar conforme a variedade e as condições locais. Para o plantio real, siga também as instruções das sementes utilizadas.</div>
+</section>
+
+<section id="cuidados" class="section reveal">
+ <div class="section-head">
+  <div class="kicker">03 — Manutenção</div><h2>Como cuidar?</h2>
+  <p>Marque os cuidados que você já aprendeu. O contador acompanha seu progresso.</p>
+ </div>
+ <div class="checklist">
+  <label class="check"><input type="checkbox"><span><b>Água:</b> manter o solo com umidade adequada, evitando encharcamento.</span></label>
+  <label class="check"><input type="checkbox"><span><b>Luz:</b> oferecer boa luminosidade para o desenvolvimento da planta.</span></label>
+  <label class="check"><input type="checkbox"><span><b>Solo:</b> usar um solo solto e bem drenado para facilitar o crescimento da raiz.</span></label>
+  <label class="check"><input type="checkbox"><span><b>Espaço:</b> evitar excesso de plantas muito próximas, seguindo o espaçamento recomendado para a variedade.</span></label>
+  <label class="check"><input type="checkbox"><span><b>Observação:</b> acompanhar folhas, umidade do solo e desenvolvimento da raiz.</span></label>
+ </div>
+ <div class="care-result" id="careResult">0 de 5 cuidados marcados.</div>
+</section>
+
+<section class="section reveal">
+ <div class="section-head">
+  <div class="kicker">04 — Conhecimento</div><h2>Partes e funções</h2>
+  <p>Clique nas abas para estudar cada parte da planta.</p>
+ </div>
+ <div class="tabs">
+  <button class="tab active" data-tab="raiz">Raiz</button>
+  <button class="tab" data-tab="folhas">Folhas</button>
+  <button class="tab" data-tab="caule">Caule</button>
+  <button class="tab" data-tab="flores">Flores e sementes</button>
+ </div>
+ <div class="tabpanel active" id="tab-raiz"><h3>Raiz</h3><p>É a parte que mais chama atenção no rabanete cultivado para alimentação. Ela cresce no solo e pode variar bastante de formato, tamanho e cor entre variedades.</p></div>
+ <div class="tabpanel" id="tab-folhas"><h3>Folhas</h3><p>Ficam acima do solo e realizam fotossíntese, processo pelo qual a planta produz matéria orgânica usando luz, água e gás carbônico.</p></div>
+ <div class="tabpanel" id="tab-caule"><h3>Caule</h3><p>É a estrutura que sustenta as folhas e conecta diferentes partes da planta. No rabanete, ele é curto em comparação com a raiz que engrossa.</p></div>
+ <div class="tabpanel" id="tab-flores"><h3>Flores e sementes</h3><p>Se a planta continuar seu desenvolvimento em vez de ser colhida, pode florescer e produzir sementes, permitindo a continuidade do ciclo.</p></div>
+</section>
+
+<section id="ciclo" class="section reveal">
+ <div class="section-head">
+  <div class="kicker">05 — Desenvolvimento</div><h2>Ciclo de vida e tempo de cultivo</h2>
+  <p>O rabanete cultivado para a raiz é conhecido por ter um ciclo curto. Muitas variedades chegam à colheita em aproximadamente 3 a 6 semanas, mas isso varia.</p>
+ </div>
+ <div class="timeline">
+  <div class="time"><b>1. Semente</b>A semente é colocada no solo.</div>
+  <div class="time"><b>2. Germinação</b>Surge a primeira estrutura da nova planta.</div>
+  <div class="time"><b>3. Crescimento</b>Folhas se desenvolvem e a raiz engrossa.</div>
+  <div class="time"><b>4. Colheita</b>A raiz é retirada quando chega ao ponto adequado.</div>
+ </div>
+ <div class="note"><b>Quanto tempo ele vive?</b> Em cultivo para consumo, o objetivo geralmente é colher a raiz ainda jovem, depois de algumas semanas. Se não for colhido, o rabanete pode continuar seu ciclo, florescer e produzir sementes. Assim, não existe um único número de dias que sirva para todas as variedades e situações.</div>
+</section>
+
+<section class="section reveal">
+ <div class="section-head">
+  <div class="kicker">06 — Curiosidades</div><h2>Você sabia?</h2>
+ </div>
+ <div class="grid">
+  <div class="card clickable"><strong>⏱️ Crescimento rápido</strong><span>O rabanete está entre as hortaliças que podem apresentar colheita relativamente rápida.</span><div class="hidden-info">Isso faz dele uma opção interessante para observar o desenvolvimento de uma planta em pouco tempo.</div></div>
+  <div class="card clickable"><strong>🌈 Variedades</strong><span>Nem todo rabanete é igual.</span><div class="hidden-info">Existem variedades com formatos, tamanhos e cores diferentes.</div></div>
+  <div class="card clickable"><strong>🌼 Pode florescer</strong><span>O ciclo não termina necessariamente na colheita.</span><div class="hidden-info">Quando a planta continua crescendo, pode produzir flores e depois sementes.</div></div>
+ </div>
+</section>
+
+<section id="quiz" class="section reveal">
+ <div class="section-head">
+  <div class="kicker">07 — Atividade</div><h2>Teste seus conhecimentos</h2>
+  <p>Responda às perguntas. Depois de escolher, a resposta correta será indicada.</p>
+ </div>
+ <div class="quiz">
+  <div id="question"></div>
+  <div id="options"></div>
+  <div class="quiz-result" id="quizResult"></div>
+  <button class="btn secondary" id="nextQuestion" style="display:none">Próxima questão</button>
+ </div>
+</section>
+
+<section class="section reveal">
+ <div class="section-head">
+  <div class="kicker">08 — Resumo</div><h2>O que aprendemos?</h2>
+ </div>
+ <div class="note">
+  O rabanete é uma planta da família Brassicaceae cultivada principalmente pela raiz. Para plantá-lo, é importante preparar um solo adequado, semear corretamente, fornecer luminosidade e manter uma boa umidade. Muitas variedades têm ciclo curto e podem ser colhidas em algumas semanas, embora o tempo dependa da variedade e do ambiente.
+ </div>
+ <h3>Fontes para aprofundamento</h3>
+ <ul class="sources">
+  <li>Embrapa — materiais sobre hortaliças e produção vegetal.</li>
+  <li>Universidade de Minnesota Extension — informações de cultivo de rabanete.</li>
+  <li>Royal Horticultural Society (RHS) — informações gerais sobre cultivo.</li>
+ </ul>
+ <button class="btn" id="topBtn">↑ Voltar ao início</button>
+</section>
+</main>
+
+<footer>Trabalho interativo sobre o rabanete • Feito para estudar e explorar</footer>
+
+<script>
+(() => {
+  const root=document.body;
+
+  // Cartões expansíveis
+  document.querySelectorAll('.card.clickable').forEach(card=>{
+    card.addEventListener('click',()=>card.classList.toggle('active'));
+  });
+
+  // Barra de progresso da leitura
+  const progress=document.getElementById('progress');
+  function updateProgress(){
+    const max=document.documentElement.scrollHeight-window.innerHeight;
+    progress.style.width=(max>0 ? Math.min(100,Math.max(0,window.scrollY/max*100)) : 0)+'%';
+  }
+  window.addEventListener('scroll',updateProgress,{passive:true});
+  updateProgress();
+
+  // Revelação das seções
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+  // Etapas do plantio
+  const stages=[
+    ['Etapa 1 — Preparar o local','Escolha um local com boa luminosidade e prepare um solo solto e bem drenado.'],
+    ['Etapa 2 — Semear','Coloque as sementes no solo seguindo a profundidade e o espaçamento recomendados para a variedade.'],
+    ['Etapa 3 — Cuidar','Mantenha a umidade adequada, observe o desenvolvimento e evite o encharcamento.'],
+    ['Etapa 4 — Colher','Quando a raiz atingir o tamanho adequado para a variedade, ela pode ser colhida.']
+  ];
+  const title=document.getElementById('stageTitle'),text=document.getElementById('stageText');
+  const seed=document.getElementById('seed'),stem=document.getElementById('stem'),rootBig=document.getElementById('rootBig');
+  document.querySelectorAll('#stageButtons button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const n=Number(btn.dataset.stage);
+      document.querySelectorAll('#stageButtons button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      title.textContent=stages[n][0];text.textContent=stages[n][1];
+      seed.style.display=n<2?'block':'none';
+      stem.style.display=n>=2?'block':'none';
+      rootBig.style.display=n===3?'block':'none';
+    });
+  });
+
+  // Checklist
+  const checks=[...document.querySelectorAll('.check input')], result=document.getElementById('careResult');
+  function updateChecks(){
+    const n=checks.filter(c=>c.checked).length;
+    result.textContent=n===checks.length?'✓ Todos os cuidados foram marcados!':n+' de '+checks.length+' cuidados marcados.';
+  }
+  checks.forEach(c=>c.addEventListener('change',updateChecks));
+
+  // Abas
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      const id=tab.dataset.tab;
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-'+id).classList.add('active');
+    });
+  });
+
+  // Quiz
+  const quiz=[
+    {q:'Qual parte do rabanete é normalmente colhida para alimentação?',a:['A raiz','A flor','A semente'],c:0},
+    {q:'Qual opção representa um cuidado adequado?',a:['Encharcar o solo','Manter umidade sem excesso','Deixar a planta sem luz'],c:1},
+    {q:'Muitas variedades de rabanete podem ser colhidas em aproximadamente...',a:['3 a 6 semanas','3 a 6 anos','20 anos'],c:0},
+    {q:'O que pode acontecer se o rabanete continuar seu ciclo sem ser colhido?',a:['Pode florescer e produzir sementes','Vira uma árvore','Deixa de ser uma planta'],c:0}
+  ];
+  let qi=0,score=0;
+  const qEl=document.getElementById('question'),oEl=document.getElementById('options');
+  const qr=document.getElementById('quizResult'),nextQ=document.getElementById('nextQuestion');
+  function renderQuestion(){
+    if(qi>=quiz.length){
+      qEl.innerHTML='<h3>Resultado final</h3><p>Você acertou <b>'+score+' de '+quiz.length+'</b> questões.</p>';
+      oEl.innerHTML='';
+      qr.textContent=score===quiz.length?'Excelente! Você dominou o conteúdo.':'Muito bem! Revise as seções acima e tente novamente.';
+      nextQ.style.display='none';
+      return;
+    }
+    const item=quiz[qi];
+    qEl.innerHTML='<h3>Questão '+(qi+1)+' de '+quiz.length+'</h3><p><b>'+item.q+'</b></p>';
+    oEl.innerHTML=item.a.map((a,i)=>'<button class="option" data-i="'+i+'">'+a+'</button>').join('');
+    qr.textContent='';nextQ.style.display='none';
+    oEl.querySelectorAll('.option').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const chosen=Number(btn.dataset.i);
+        oEl.querySelectorAll('.option').forEach(b=>b.disabled=true);
+        oEl.querySelectorAll('.option')[item.c].classList.add('correct');
+        if(chosen===item.c){score++;qr.textContent='✓ Resposta correta!';}
+        else {btn.classList.add('wrong');qr.textContent='Resposta incorreta. A correta está marcada em verde.';}
+        nextQ.style.display='inline-flex';
+      });
+    });
+  }
+  nextQ.addEventListener('click',()=>{qi++;renderQuestion()});
+  renderQuestion();
+
+  document.getElementById('topBtn').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+})();
+</script>
+</body>
+</html>
